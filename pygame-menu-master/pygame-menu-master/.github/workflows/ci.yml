@@ -1,0 +1,32 @@
+name: CI
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    uses: ppizarror/workflow-actions/.github/workflows/test_python.yml@master
+    strategy:
+      matrix:
+        python: [ 3.6, 3.7, 3.8, 3.9, '3.10' ]
+    with:
+      env-vars: |
+        SDL_AUDIODRIVER=disk
+        SDL_VIDEODRIVER=dummy
+      install-extras: test
+      os: ubuntu-20.04
+      python-version: ${{ matrix.python }}
+
+  codeql:
+    uses: ppizarror/workflow-actions/.github/workflows/codeql.yml@master
+    with:
+      language: python
