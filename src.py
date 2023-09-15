@@ -3,11 +3,13 @@ import pygame_menu
 from pygame_menu.examples import create_example_window
 from collections import deque
 import time
+import random
 
 pygame.init()
 
+screenX, screenY = 1200, 800
 pygame.display.set_caption("2048 Gravity mode")
-window = pygame.display.set_mode((1533, 840))
+window = pygame.display.set_mode((screenX, screenY))
 clock = pygame.time.Clock()
 
 font = pygame.font.Font("C:/Users/cjhpr/OneDrive/바탕 화면/한과영/2023 SAF/사랑방정식/font/BinggraeSamanco.ttf", 70)
@@ -72,7 +74,7 @@ window.fill((255, 255, 255))
 pygame.display.flip()
 balls = deque()
 
-ballX, ballY, ballNumber = 800, 0, 2
+ballX, ballY, ballNumber = screenX/2, 0, 2
 g, multiple = 9.8, 10
 startTime, elapseIntTime = 0, 0
 
@@ -82,7 +84,7 @@ while run:
     if gameStat == 0:
         if firstPlay:
             firstPlay = False
-            button = pyButton(666, 650, 200, 100, 'Start', clickEvent)
+            button = pyButton(screenX/2-50, screenY-100, 100, 50, 'Start', clickEvent)
             button.enableButton()
             
         for obj in objects:
@@ -108,7 +110,7 @@ while run:
         if elapseIntTime < int(time.time()-startTime):
             ballNumber *= 2
             elapseIntTime = int(time.time()-startTime)
-        if ballY > 840:
+        if ballY > screenY:
             startTime = time.time()
             elapseIntTime = 0
             ballY = 0
