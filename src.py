@@ -4,10 +4,13 @@ from pygame_menu.examples import create_example_window
 from collections import deque
 import time
 import random
+import math
 
 pygame.init()
 
-screenX, screenY = 1200, 800
+screenX, screenY = 1200, 700
+PI = math.pi
+
 pygame.display.set_caption("2048 Gravity mode")
 window = pygame.display.set_mode((screenX, screenY))
 clock = pygame.time.Clock()
@@ -43,7 +46,7 @@ class pyButton():
     def enableButton(self):
         objects.append(self)
     
-    def process(self):
+    def process (self):
         mousePos = pygame.mouse.get_pos()
         self.buttonSurface.fill(self.fillColors['normal'])
         if self.buttonRect.collidepoint(mousePos):
@@ -74,8 +77,8 @@ window.fill((255, 255, 255))
 pygame.display.flip()
 balls = deque()
 
-ballX, ballY, ballNumber = screenX/2, 0, 2
-g, multiple = 9.8, 10
+ballX, ballY, ballNumber = screenX/2+screenY*0.3, 0, 2
+g, multiple = 3, 10
 startTime, elapseIntTime = 0, 0
 
 run = True
@@ -106,14 +109,68 @@ while run:
         
         window.fill((255, 255, 255))
         
-        ballY = 0.5*g*multiple*(time.time()-startTime)**3
-        if elapseIntTime < int(time.time()-startTime):
-            ballNumber *= 2
-            elapseIntTime = int(time.time()-startTime)
-        if ballY > screenY:
-            startTime = time.time()
-            elapseIntTime = 0
-            ballY = 0
+        pygame.draw.line(window, (0,0,0), [screenX/2-screenY*0.3-33, screenY*0.25], [screenX/2-screenY*0.3-33, screenY*0.65], 3)
+        pygame.draw.line(window, (0,0,0), [screenX/2+screenY*0.3+33, screenY*0.25], [screenX/2+screenY*0.3+33, screenY*0.65], 3)
+        pygame.draw.arc(window, (0,0,0), [screenX/2-screenY*0.3-34, screenY*0.35-33, screenY*0.6+68, screenY*0.6+66], PI, PI*2, 3)
+        
+        pygame.draw.line(window, (0,0,0), [screenX/2-screenY*0.3+33, screenY*0.25], [screenX/2-screenY*0.3+33, screenY*0.65], 3)
+        pygame.draw.line(window, (0,0,0), [screenX/2+screenY*0.3-33, screenY*0.25], [screenX/2+screenY*0.3-33, screenY*0.65], 3)
+        pygame.draw.arc(window, (0,0,0), [screenX/2-screenY*0.3+32, screenY*0.35+33, screenY*0.6-64, screenY*0.6-66], PI, PI*2, 3)
+        
+        for ball in balls:
+            pygame.draw.circle(window, (255, 0, 0), (ball[0], ball[1]), 30)
+            ballsText = font.render(str(ball[2]), True, (0, 0, 0))
+            ballsTextRect = ballsText.get_rect()
+            
+            ballsTextRect.centerx = ball[0]
+            ballsTextRect.centery = ball[1]
+            window.blit(ballsText, ballsTextRect)        
+        
+        if len(balls) == 0:
+            if ballY < screenY*0.65:
+                ballY = 0.5*g*multiple*(time.time()-startTime)**3
+                if elapseIntTime < int(time.time()-startTime):
+                    ballNumber *= 2
+                    elapseIntTime = int(time.time()-startTime)
+            elif ballY < screenY*0.95:
+                ballY = 0.5*g*multiple*(time.time()-startTime)**3
+                if elapseIntTime < int(time.time()-startTime):
+                    ballNumber *= 2
+                    elapseIntTime = int(time.time()-startTime)
+                
+                if ballY > screenY*0.95:
+                    ballY = screenY*0.95
+                h = ballY - screenY*0.65
+                ballX = screenX/2+((screenY*0.3)**2-h**2)**0.5
+            else:
+                balls.append((ballX, ballY, ballNumber))
+                ballX = screenX/2+screenY*0.3
+                ballY = 0
+                ballNumber = 2
+                startTime, elapseIntTime = time.time(), 0
+        else:
+            if ballY < screenY*0.65:
+                ballY = 0.5*g*multiple*(time.time()-startTime)**3
+                if elapseIntTime < int(time.time()-startTime):
+                    ballNumber *= 2
+                    elapseIntTime = int(time.time()-startTime)
+            elif ballY < screenY*0.95:
+                ballY = 0.5*g*multiple*(time.time()-startTime)**3
+                if elapseIntTime < int(time.time()-startTime):
+                    ballNumber *= 2
+                    elapseIntTime = int(time.time()-startTime)
+                
+                if ballY > screenY*0.95:
+                    ballY = screenY*0.95
+                h = ballY - screenY*0.65
+                ballX = screenX/2+((screenY*0.3)**2-h**2)**0.5
+            else:
+                balls.append((ballX, ballY, ballNumber))
+                ballX = screenX/2+screenY*0.3
+                ballY = 0
+                ballNumber = 2
+                startTime, elapseIntTime = time.time(), 0
+        
         pygame.draw.circle(window, (255, 0, 0), (ballX, ballY), 30)
         
         ballText = font.render(str(ballNumber), True, (0, 0, 0))
@@ -121,7 +178,8 @@ while run:
         
         ballTextRect.centerx = ballX
         ballTextRect.centery = ballY
-        
         window.blit(ballText, ballTextRect)
+        
+        pygame.draw.circle(window, (0,0,0), (screenX/2, screenY*0.95), 3)
         
         pygame.display.flip()
