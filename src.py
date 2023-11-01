@@ -15,7 +15,6 @@ pygame.display.set_caption("2048 Gravity mode")
 window = pygame.display.set_mode((screenX, screenY))
 clock = pygame.time.Clock()
 
-font = pygame.font.Font("C:/Users/cjhpr/OneDrive/바탕 화면/한과영/2023 SAF/사랑방정식/font/BinggraeSamanco.ttf", 70)
 sysfont = pygame.font.SysFont("arial", 40)
 
 gameStat = 0 #0: main, 1: play, 2: result
@@ -94,7 +93,7 @@ def init(scoreList):
     for i in range(L):
         scoreList.pop()
         
-    f = open("C:/Users/cjhpr/OneDrive/바탕 화면/한과영/EOS/2023 SAC/2048UShapePython/2048UShapePython/data.txt", 'r', encoding="UTF-8")
+    f = open("data.txt", 'r', encoding="UTF-8")
     #저장방식: 이름, 결과치
     
     for line in f:
@@ -114,7 +113,7 @@ def init(scoreList):
 
 def writeNew(scoreList):
     #global scoreList
-    f = open("C:/Users/cjhpr/OneDrive/바탕 화면/한과영/EOS/2023 SAC/2048UShapePython/2048UShapePython/data.txt", 'w', encoding="UTF-8")
+    f = open("data.txt", 'w', encoding="UTF-8")
     for i in range(len(scoreList)):
         line = scoreList[i][0] + " " + str(scoreList[i][1]) + "\n"
         f.write(line)
@@ -396,7 +395,7 @@ while run:
         rect.centery = 60
         window.blit(sortSurf, rect)        
         
-        mainText = pygame.font.SysFont("arial", 80).render("Score: "+str(score), True, (30, 0, 0))
+        mainText = pygame.font.SysFont("arial", 45).render("Score: "+str(score), True, (30, 0, 0))
         mainRect = mainText.get_rect()
         mainRect.centerx = screenX/2
         mainRect.centery = screenY/2
@@ -461,11 +460,14 @@ while run:
                 y = max(0, min(pygame.mouse.get_pos()[1], min(screenY*0.60, balls[-(leftRight+1)//2][1]-100)))
             ballY = y
             
-            pygame.draw.line(window, (255,200,200), [screenX/2+leftRight*(radius+100), 0], [screenX/2+leftRight*(radius+100), screenY*0.60], 5)
+            arrowH = screenY*0.60
+            if len(balls) > 0:
+                arrowH = min(screenY*0.60, balls[0][1]-40)
+            pygame.draw.line(window, (255,200,200), [screenX/2+leftRight*(radius+100), 0], [screenX/2+leftRight*(radius+100), arrowH], 5)
             pygame.draw.line(window, (255,200,200), [screenX/2+leftRight*(radius+100), 0], [screenX/2+leftRight*(radius+100)-30, 30], 5)
             pygame.draw.line(window, (255,200,200), [screenX/2+leftRight*(radius+100), 0], [screenX/2+leftRight*(radius+100)+30, 30], 5)
-            pygame.draw.line(window, (255,200,200), [screenX/2+leftRight*(radius+100), screenY*0.60], [screenX/2+leftRight*(radius+100)-30, screenY*0.60-30], 5)
-            pygame.draw.line(window, (255,200,200), [screenX/2+leftRight*(radius+100), screenY*0.60], [screenX/2+leftRight*(radius+100)+30, screenY*0.60-30], 5)
+            pygame.draw.line(window, (255,200,200), [screenX/2+leftRight*(radius+100), arrowH], [screenX/2+leftRight*(radius+100)-30, arrowH-30], 5)
+            pygame.draw.line(window, (255,200,200), [screenX/2+leftRight*(radius+100), arrowH], [screenX/2+leftRight*(radius+100)+30, arrowH-30], 5)
             
         elif playStage == 2:
             for event in pygame.event.get():
@@ -651,13 +653,13 @@ while run:
                 
         window.fill((255, 255, 255))
         
-        mainText = font.render("Game Over️", True, (255, 0, 0))
+        mainText = sysfont.render("Game Over️", True, (255, 0, 0))
         mainRect = mainText.get_rect()
         mainRect.centerx = screenX/2
         mainRect.centery = screenY*0.3
         window.blit(mainText, mainRect)
         
-        scoreText = font.render("Score:" + str(score), True, (0, 0, 0))
+        scoreText = sysfont.render("Score:" + str(score), True, (0, 0, 0))
         scoreRect = scoreText.get_rect()
         scoreRect.centerx = screenX/2
         scoreRect.centery = screenY*0.5
