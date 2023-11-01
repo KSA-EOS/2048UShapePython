@@ -113,7 +113,7 @@ def init(scoreList):
 
 def writeNew(scoreList):
     #global scoreList
-    f = open("data.txt", 'w', encoding="UTF-8")
+    f = open("data.txt", 'w+', encoding="UTF-8")
     for i in range(len(scoreList)):
         line = scoreList[i][0] + " " + str(scoreList[i][1]) + "\n"
         f.write(line)
@@ -133,6 +133,9 @@ def addNew(scoreList, name1, score1):
     writeNew(scoreList)
     init(scoreList)
     return
+
+f = open("data.txt", 'a+', encoding="UTF-8")
+f.close()
 
 init(scoreList)
 print(scoreList)
