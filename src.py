@@ -513,7 +513,7 @@ while run:
                     x = screenX/2+leftRight*(((radius)**2-h**2)**0.5)
                     
                 if dist(x, y, balls[-(leftRight+1)//2][0], balls[-(leftRight+1)//2][1]) < 85:
-                    angle = math.atan(abs(balls[-(leftRight+1)//2][0]-screenX/2)/(balls[-(leftRight+1)//2][1]-screenY*0.65))
+                    angle = math.atan( abs(balls[-(leftRight+1)//2][0]-screenX/2) / (balls[-(leftRight+1)//2][1]-screenY*0.60))
                     angle += 2*plusAngle
                     ballX = screenX/2 + leftRight*radius*math.sin(angle)
                     ballY = screenY*0.60 + radius*math.cos(angle)
